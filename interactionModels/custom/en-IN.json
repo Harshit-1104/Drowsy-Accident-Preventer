@@ -1,0 +1,129 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "night angel",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "InitializeIntent",
+          "slots": [],
+          "samples": [
+            "initialize"
+          ]
+        },
+        {
+          "name": "secondWave",
+          "slots": [
+            {
+              "name": "Response",
+              "type": "response",
+              "samples": [
+                "{Response}"
+              ]
+            }
+          ],
+          "samples": [
+            "{Response}",
+            "secondWave"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "yes"
+              }
+            }
+          ],
+          "name": "response"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "start"
+              }
+            },
+            {
+              "name": {
+                "value": "begin"
+              }
+            },
+            {
+              "name": {
+                "value": "initialize"
+              }
+            }
+          ],
+          "name": "initialize"
+        }
+      ],
+      "modelConfiguration": {
+        "fallbackIntentSensitivity": {
+          "level": "LOW"
+        }
+      }
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "InitializeIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": []
+        },
+        {
+          "name": "secondWave",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "Response",
+              "type": "response",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.172762465852.500772569220"
+              }
+            }
+          ],
+          "delegationStrategy": "ALWAYS"
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.172762465852.500772569220",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Last time?"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "20"
+}
