@@ -14,7 +14,7 @@ omega_warn_lim= 180 #3 min
 total_lim= 300 #5 min
 
 def Warn():
-	#nhi pata kaise warn
+	# Triggers the alexa
 
 def check_ignition():
 	if(somehow_check_ignition):
