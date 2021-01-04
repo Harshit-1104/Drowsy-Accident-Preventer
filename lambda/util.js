@@ -17,3 +17,27 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
     return s3PreSignedUrl;
 
 }
+
+module.exports = {
+    createReminder(requestMoment, scheduledMoment, timezone, locale, message) {
+        return {
+            requestTime: requestMoment.format('YYYY-MM-DDTHH:mm:ss.000'),
+            trigger: {
+                type: 'SCHEDULED_ABSOLUTE',
+                scheduledTime: scheduledMoment.format('YYYY-MM-DDTHH:mm:ss.000'),
+                timeZoneId: timezone
+            },
+            alertInfo: {
+                spokenInfo: {
+                    content: [{
+                        locale: locale,
+                        text: message
+                    }]
+                }
+            },
+            pushNotification: {
+                status: 'ENABLED'
+            }
+        }
+    }
+}

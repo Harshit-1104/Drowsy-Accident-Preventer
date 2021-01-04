@@ -1,149 +1,113 @@
-
 const Alexa = require('ask-sdk-core');
 const firebase = require('firebase');
-const moment = require('moment-timezone');
-const util = require('./util');
-const storage = require('./storage')
-let mainid;
+let mainid = "";
+
+
 
 var firebaseConfig = {
-    apiKey: "AIzaSyDWhoU2xu_P37aq_TPp_bI1NpsSW3XvT00",
-    authDomain: "honda-840f2.firebaseapp.com",
-    databaseURL: "https://honda-840f2-default-rtdb.firebaseio.com",
-    projectId: "honda-840f2",
-    storageBucket: "honda-840f2.appspot.com",
-    messagingSenderId: "624369649172",
-    appId: "1:624369649172:web:d41d540620e52787fb4901",
-    measurementId: "G-79KEV18HZY"
+    apiKey: "AIzaSyBpzQwC72Tl2h8jMEK8zhjJ21QjGGHWgM4",
+    authDomain: "honda-10609.firebaseapp.com",
+    databaseURL: "https://honda-10609-default-rtdb.firebaseio.com",
+    projectId: "honda-10609",
+    storageBucket: "honda-10609.appspot.com",
+    messagingSenderId: "1045469449899",
+    appId: "1:1045469449899:web:c891a3082872aa29f5b1ee",
+    measurementId: "G-XC7TRQGHQH"
   };
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
+  firebase.initializeApp(firebaseConfig);
+ const db=firebase.database();
+
+
+
+const APP_NAME = "Template Seven";
+const messages = {
+  NOTIFY_MISSING_PERMISSIONS: 'Please enable profile permissions in the Amazon Alexa app.',
+  ERROR: 'Uh Oh. Looks like something went wrong.'
+};
+
+const FULL_NAME_PERMISSION = "alexa::profile:name:read";
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
-    async handle(handlerInput) {
-        db.goOnline();
-        const speakOutput = `Are you awake?`
-        const reprompt = 'Are you awake? Please respond or i\'ll have to take safety measures...<audio src="soundbank://soundlibrary/alarms/air_horns/air_horns_04"/><audio src="soundbank://soundlibrary/alarms/buzzers/buzzers_08"/><audio src="soundbank://soundlibrary/alarms/car_alarms/car_alarms_05"/>'
-        const id = handlerInput.requestEnvelope.session.user.userId;
-        var today = new Date();
-        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        const triggertime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        const foo =  await db.ref("Rash Drivers").push({
-                    ID_:id,
-                    Today_Date : date,
-                    Incident_Time : triggertime
-             });
-        mainid = await db.ref("Drunk Drivers").push({
-                    ID_:id,
-                    Today_Date : date,
-                    Incident_Time :triggertime
-             }).getKey();
-        db.goOffline();
+    handle(handlerInput) {
+        const speakOutput = 'Welcome';
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(reprompt)
-            .getResponse()
+            .reprompt(speakOutput)
+            .getResponse();
     }
 };
 
 
-const FinisherIntentHandler = {
+const InitializeIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getIntentName(handlerInput.requestEnvelope) === 'Finisher';
+        return Alexa.getIntentName(handlerInput.requestEnvelope) === 'InitializeIntent';
     },
     async handle(handlerInput) {
         db.goOnline()
-        const res = await db.ref('Drunk Drivers').child(mainid).remove();
+        
+        const speakOutput = `Are you awake?`
+        const op2 = 'Are you awake?... i am asking again?... 3... 2... 1... <audio src="soundbank://soundlibrary/video_tunes/video_tunes_07"/>'
+        const id =handlerInput.requestEnvelope.session.user.userId;
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        const triggertime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        const ca =  await db.ref("rash").push({
+                    ID_:id,  //User id can be acess using permision
+                    Today_Date : date,
+                    Incident_Time : triggertime
+             });
+        mainid = await db.ref("drunker").push({
+                    ID_:id,  //User id can be acess using permision
+                    Today_Date : date,
+                    Incident_Time :triggertime
+             }).getKey();
+         //mainid = await db.ref("drunker").push().getKey()
+        //const speakOutput = mainid //`Are you awake?`
         db.goOffline();
-        
-        let speechText = 'That\'s great!... I have stored your details for security purposes.'
-        const {attributesManager, serviceClientFactory, requestEnvelope} = handlerInput;
-        const sessionAttributes = attributesManager.getSessionAttributes();
-        var timezone = 'Asia/Kolkata'
-        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId
-        
-        const upsServiceClient = serviceClientFactory.getUpsServiceClient();
-        timezone = await upsServiceClient.getSystemTimeZone(deviceId);
-        console.log(timezone)
-        
-        try {
-            const {permissions} = requestEnvelope.context.System.user;
-            if (!(permissions && permissions.consentToken))
-                throw { statusCode: 401, message: 'No permissions available'};
-            
-            const reminderServiceClient = serviceClientFactory.getReminderManagementServiceClient();
-            const remindersList = await reminderServiceClient.getReminders();
-            console.log('Current reminders: ' + JSON.stringify(remindersList));
-            
-            //console.log(sessionAttributes);
-            
-            for (var i = 0; i < remindersList.alerts.length; i++) {
-                if (remindersList.alerts[i].status !== "COMPLETED") {
-                    var token = remindersList.alerts[i].alertToken;
-                    await reminderServiceClient.deleteReminder(token);
-                    console.log('Deleted previous reminder token: ' + token);
-                }
-            }
-            
-            
-            /*
-            if (previousReminder) {
-                try {
-                    if (remindersList.totalCount !== "0") {
-                        await reminderServiceClient.deleteReminder(previousReminder);
-                        console.log('Deleted previous reminder token: ' + previousReminder);
-                    }
-                } catch (error) {
-                    console.log('Failed to delete reminder: ' + previousReminder + 'via ' + JSON.stringify(error));    
-                }
-            }*/
-            
-            moment.locale(Alexa.getLocale(requestEnvelope));
-            const createdMoment = moment().tz(timezone);
-            let triggerMoment = createdMoment.add(1, 'minutes');
-            
-            console.log('Reminder schedule: ' + triggerMoment.format('YYYY-MM-DDTHH:mm:ss.000'));    // YYYY-MM-DDTHH:mm:00.000
-            const message = 'I hope you are awake!... stay safe'
-            const reminder = util.createReminder(createdMoment, triggerMoment, timezone, Alexa.getLocale(requestEnvelope), message)
-            const reminderResponse = await reminderServiceClient.createReminder(reminder);
-            
-            console.log('Reminder created with token: ' + reminderResponse.alertToken);
-        } catch (error) {
-            console.log(JSON.stringify(error));
-            
-            switch (error.statusCode) {
-                case 401:
-                    speechText = '401'
-                    break;
-                case 403:
-                    speechText = '403'
-                    break;
-                default:
-                    speechText = 'Expect the unexpected!'
-            }
-        }
-        
+                return handlerInput.responseBuilder
+                    .speak(speakOutput)
+                    .reprompt(op2)
+                    .getResponse()
+
+    }
+}
+
+
+
+const SecondWaveIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getIntentName(handlerInput.requestEnvelope) === 'secondWave';
+    },
+    async handle(handlerInput) {
+        const speakOutput = 'Good to hear that!... Stay safe, Stay awake!'
+        db.goOnline()
+        const res = await db.ref('drunker').child(mainid).remove();
+        db.goOffline(); 
         return handlerInput.responseBuilder
-            .speak(speechText)
-            .withShouldEndSession(true)
+            .speak(speakOutput)
             .getResponse()
     }
 }
-/*
-const ResponseInterceptor = {
-    async process(handlerInput) {
-        db.goOnline()
-        await db.ref("Honda").push({
-            drunk:"From interceptor"
-        })
-        db.goOffline()
-        return handlerInput.responseBuilder.getResponse();
+
+
+const PersistenceSavingResponseInterceptor = {
+    process(handlerInput) {
+        return new Promise((resolve, reject) => {
+            db.ref("drunker").push({
+                    drunk:"hello"  //User id can be acess using permision
+             }).then(() => {
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
     }
 };
-*/
 
 const HelpIntentHandler = {
     canHandle(handlerInput) {
@@ -203,7 +167,7 @@ const SessionEndedRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
     },
     handle(handlerInput) {
-        console.log(`~~~~ Session ended: ${JSON.stringify(handlerInput.requestEnvelope)}`);
+        console.log(`~~ Session ended: ${JSON.stringify(handlerInput.requestEnvelope)}`);
         // Any cleanup logic goes here.
         return handlerInput.responseBuilder.getResponse(); // notice we send an empty response
     }
@@ -238,7 +202,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
-        console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
+        console.log(`~~ Error handled: ${JSON.stringify(error)}`);
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -257,7 +221,8 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        FinisherIntentHandler,
+        InitializeIntentHandler,
+        SecondWaveIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
@@ -265,6 +230,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         IntentReflectorHandler)
     .addErrorHandlers(
         ErrorHandler)
+    /.addResponseInterceptors(PersistenceSavingResponseInterceptor)/
     .withApiClient(new Alexa.DefaultApiClient())
     .withCustomUserAgent('sample/hello-world/v1.2')
     .lambda();
