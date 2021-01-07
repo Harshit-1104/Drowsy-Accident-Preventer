@@ -29,6 +29,8 @@ The main branch works with Alexa. When triggered, Alexa will ask a question “A
 
 ## Important Links
 ![Solution with Alexa](https://youtu.be/djmmt2VUex4)
+
 ![Solution with DeepSpeech](https://youtu.be/AG4IujGmdxM)
+
 ![Presentation](https://youtu.be/dQw4w9WgXcQ)
 
