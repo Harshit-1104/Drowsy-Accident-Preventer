@@ -32,5 +32,5 @@ The main branch works with Alexa. When triggered, Alexa will ask a question “A
 
 [Solution with DeepSpeech](https://youtu.be/AG4IujGmdxM)
 
-[Presentation](https://youtu.be/dQw4w9WgXcQ)
+[Presentation](https://docs.google.com/presentation/d/1FnJl_b-WKMzxwABSV__NzlueZjmv7LkCQJ3kzsJecPQ/edit?usp=sharing)
 
