@@ -28,9 +28,9 @@ The main branch works with Alexa. When triggered, Alexa will ask a question “A
 (some shizz to be copied from ppt)
 
 ## Important Links
-![Solution with Alexa](https://youtu.be/djmmt2VUex4)
+[Solution with Alexa](https://youtu.be/djmmt2VUex4)
 
-![Solution with DeepSpeech](https://youtu.be/AG4IujGmdxM)
+[Solution with DeepSpeech](https://youtu.be/AG4IujGmdxM)
 
-![Presentation](https://youtu.be/dQw4w9WgXcQ)
+[Presentation](https://youtu.be/dQw4w9WgXcQ)
 
