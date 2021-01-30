@@ -6,7 +6,6 @@
 - [Solution](#solution)
 - [Pattern Recognition](#Pattern-Recognition)
 - [Alexa Skill](#Alexa-Skill)
-- [DeepSpeech model](#DeepSpeech)
 - [Project Links](#Important-links)
 
 ## Problem Statement 
@@ -24,13 +23,8 @@ The IMU data is constantly processed and if any of the following irregularities 
 ## Alexa Skill
 The main branch works with Alexa. When triggered, Alexa will ask a question “Are you wake?”. If answered within 8 seconds it would imply that the driver is awake. If not then Alexa will ask the same question and wait for 9 seconds. If still not answered within 9 seconds an alarm is played to alarm is played t alert the driver.
 
-## DeepSpeech
-A separate branch has been created for this. Alexa requires internet connection for it’s working which is a drawback. And moreover Alexa doesn't provide much backend freedom and thus we require a third party solution to trigger it.To tackle this, we used the DeepSpeech language processing model by Mozilla, which is an open source Speech to Text model and does the same work as we did with Alexa. We can use the speaker and microphone present in the dashboard itself for our solution and thus no Alexa device is required.
-
 ## Important Links
 [Solution with Alexa](https://youtu.be/djmmt2VUex4)
-
-[Solution with DeepSpeech](https://youtu.be/AG4IujGmdxM)
 
 [Presentation](https://docs.google.com/presentation/d/1FnJl_b-WKMzxwABSV__NzlueZjmv7LkCQJ3kzsJecPQ/edit?usp=sharing)
 
